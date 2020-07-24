@@ -1,4 +1,6 @@
 import random
+from tqdm import tqdm
+from time import sleep
 
 loopnumberSTR = input("How many times would you like it to run? (It will run x stay and x switch.) ")
 loopnumber = int(loopnumberSTR)
@@ -8,12 +10,11 @@ times_won_switch = 0
 times_lost_switch = 0
 times_won_stay = 0
 times_lost_stay = 0
-print("Stay phase.")
+error_count = 0
+print("Stay phase in progress...")
 
 #perfroming stay phase
-while loopcount <= loopnumber:
-    #adding one to loop
-    loopcount += 1
+for i in tqdm(range(loopnumber)):
     #defineing random doors
     prize_door = random.randint(1,3)
     chosen_door = random.randint(1,3)
@@ -22,15 +23,16 @@ while loopcount <= loopnumber:
         times_won_stay += 1
     elif  prize_door != chosen_door:
         times_lost_stay += 1
-
+    else:
+        error_count += 1
+        
 loopcount = 1
-print("Switch phase.")
+print("Stay phase complete. ✔")
+print("Switch phase in progress...")
 opened_door = 0
-    
-while loopcount <= loopnumber:
-    #adding 1 to loop count
-    loopcount += 1
 
+
+for i in tqdm(range(loopnumber)):
     #generating random doors
     prize_door = random.randint(1,3)
     chosen_door = random.randint(1,3)
@@ -45,6 +47,8 @@ while loopcount <= loopnumber:
     elif prize_door != 3:
         if chosen_door != 3:
             opened_door = 3
+    else:
+        error_count += 1
 
     #switching doors
     switched_door = 0
@@ -57,12 +61,21 @@ while loopcount <= loopnumber:
             switched_door = 2
         if prize_door != 3 and opened_door != 3:
             switched_door = 3
+        else:
+            error_count += 1
 
     if prize_door == switched_door:
         times_won_switch += 1
     elif prize_door != switched_door:
         times_lost_switch += 1
+    else:
+        error_count += 1
 
+print("Switch phase complete. ✔")
+if error_count > 0:
+    print("No errors ✔")
+else:
+    print(error_count, "errors ❌")
 print("")
 print("Times lost stay, ",times_lost_stay)
 print("Times won stay, ",times_won_stay)
